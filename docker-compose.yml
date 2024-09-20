@@ -5,8 +5,10 @@ services:
     container_name: go
     build:
       context: apps/api
-      dockerfile: dockerfile
+      dockerfile: Dockerfile
     tty: true
+    platform: linux/x86_64
+    env_file: apps/api/.env
     ports:
       - 8080:8080
     volumes:
