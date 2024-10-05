@@ -2,18 +2,23 @@
 <html>
     <head>
         <meta httpequiv="ContentType"content="text/html;charset=utf8">
-        <title>Upload files</title>
+        <title>Show files</title>
     </head>
     <body>
-        <h1>Upload file</h1>
-        <form action="./upload" method="POST" enctype='multipart/form-data'>
-            <input type="file" name="file">
-            <input type="submit" value="Submit">
-        </form>
+        <h1>Uploaded Files.</h1>
+
+        <ul>
+            {{ range . }}
+            <li>
+                <p>{{ . }}</p>
+            </li>
+            {{ end }}
+        </ul>
 
         <div class="link">
-            <a href="./show">link to show</a>
+            <a href="./upload">upload files</a>
+            <a href="./show">show file list</a>
             <a href="./">back to root</a>
         </div>
-        </body>
+    </body>
 </html>

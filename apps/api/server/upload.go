@@ -2,12 +2,81 @@ package server
 
 import (
 	"fmt"
-	"io"
 	"net/http"
-	"os"
 	"path/filepath"
 	"time"
+
+	"context"
+	"io"
+	"log"
+	"os"
+
+	// "io"
+	// "os"
+	// "bufio"
+
+	"cloud.google.com/go/storage"
+	"google.golang.org/api/iterator"
+	"google.golang.org/api/option"
 )
+
+func getUploadFiles() []string {
+	credentialFilePath := "/app/key.json"
+
+	// Create client.
+	ctx := context.Background()
+	client, err := storage.NewClient(ctx, option.WithCredentialsFile(credentialFilePath))
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	// Get filename from Storage.
+	bucket := "receipt-bucket-11"
+
+	it := client.Bucket(bucket).Objects(ctx, nil)
+	var names []string
+	for {
+		attrs, err := it.Next()
+		if err == iterator.Done {
+			break
+		}
+		if err != nil {
+			log.Fatal(err)
+		}
+		names = append(names, attrs.Name)
+	}
+	return names
+}
+
+func uploadImageToCloudStorage(f *os.File, name string) string {
+	credentialFilePath := "/app/key.json"
+
+	// Create client.
+	ctx := context.Background()
+	client, err := storage.NewClient(ctx, option.WithCredentialsFile(credentialFilePath))
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	// Copy to Storage
+	bucket := "receipt-bucket-11"
+	dir := "temp/"
+	object := dir + name
+
+	wc := client.Bucket(bucket).Object(object).NewWriter(ctx)
+	if _, err = io.Copy(wc, f); err != nil {
+		fmt.Errorf("io.Copy:%v", err)
+	}
+	if err := wc.Close(); err != nil {
+		fmt.Errorf("wc.Close:%v", err)
+	}
+
+	fmt.Printf("Blob %v uploaded \n", object)
+
+	log.Println("done")
+
+	return bucket + ":" + object
+}
 
 func uploadImageToLocal(w http.ResponseWriter, r *http.Request) string {
 	file, fileHeader, err := r.FormFile("file")

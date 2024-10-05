@@ -7,16 +7,11 @@
     <body>
         <h1>Upload Success!!</h1>
 
-        <ul>
-            {{ range . }}
-            <li style="height: 200px; overflow: scroll;">
-                <img src="images/{{ . }}" />
-            </li>
-            {{ end }}
-        </ul>
+        <p>upload to google storage.</p>
+        <p>  => {{ . }}</p>
 
         <div class="link">
-            <a href="./index">upload files</a>
+            <a href="./upload">upload files</a>
             <a href="./show">show file list</a>
             <a href="./">back to root</a>
         </div>

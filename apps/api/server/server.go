@@ -16,7 +16,7 @@ func Start() {
 	http.HandleFunc("/", index)
 	http.HandleFunc("/show", show)
 	http.HandleFunc("/upload", upload)
-	http.HandleFunc("/list", list)
+	http.HandleFunc("/home", home)
 
 	// fileserver
 	fileServer := http.FileServer(http.Dir("./uploadimages"))
