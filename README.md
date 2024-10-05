@@ -8,7 +8,8 @@ receipt api backend
     for Cloud Run '--platform: linux/x86_64'.
 
     ```
-    docker build --platform linux/x86_64 -t {acount_name}/{project_name}:{tag} apps/api
+    docker build --platform linux/x86_64 -t {acount_name}/{project_name}:{tag} -f apps/api/Dockerfile.prd apps/api
+    docker run --rm -p 80:8080 --platform linux/x86_64 --env-file=apps/api/.env {acount_name}/{project_name}:{tag}
     ```
 
 1. Push image to dockerhub.
